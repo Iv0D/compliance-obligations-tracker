@@ -1,0 +1,47 @@
+# Commit Story Rule
+
+For this take-home project, do not create one giant commit.
+
+Organize the work into small, meaningful commits that tell the story of the solution from setup to implementation, testing, documentation, and refactoring.
+
+Each commit should represent one clear step in the development process.
+
+Good examples:
+
+```txt
+chore: setup project structure
+feat: add domain model for orders
+feat: implement create order use case
+feat: expose order endpoints
+feat: add order form and API client
+test: cover create order business rules
+docs: explain technical decisions and AI usage
+refactor: move validation from controller to use case
+```
+
+Prefer commit messages that show intent, not just files changed.
+
+Use these prefixes:
+
+```txt
+chore: setup, tooling, config, dependencies
+feat: new functionality
+test: tests
+docs: documentation
+refactor: restructuring without changing behavior
+fix: bug fixes
+```
+
+A valuable commit is one that shows judgment. For example, a commit like:
+
+```txt
+refactor: move validation from controller to use case
+```
+
+is especially important because it shows that business logic was moved to the correct layer and that the architecture was improved intentionally.
+
+Before making or suggesting a group of changes, decide whether they belong in one commit or should be split.
+
+If multiple unrelated responsibilities are being changed at once, split them into separate commits.
+
+After each meaningful change, suggest the commit message that should be used before continuing.

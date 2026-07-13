@@ -1,0 +1,43 @@
+# Testing Criteria Rule
+
+For this take-home project, do not try to maximize the number of tests.
+
+Prioritize a small set of well-chosen tests that prove technical judgment and cover the important behavior of the system.
+
+Tests should focus on:
+
+* the happy path
+* invalid input
+* important business rules
+* expected errors
+
+Prefer testing use cases, domain logic, and critical behavior over testing implementation details.
+
+Do not write tests just to increase coverage if they do not prove meaningful behavior.
+
+For each important use case, include tests like:
+
+```txt
+CreateOrderUseCase
+- creates an order with valid items
+- rejects empty item list
+- rejects negative quantity
+- calculates total correctly
+```
+
+When generating or modifying code, also suggest the minimum useful tests for that change.
+
+Before adding a test, ask whether it proves one of these:
+
+```txt
+- Does the main flow work?
+- Is invalid input rejected?
+- Is a business rule enforced?
+- Is an expected error handled correctly?
+```
+
+If a test depends too much on internal implementation details, prefer rewriting it to test observable behavior instead.
+
+Keep tests simple, readable, and easy to explain during a technical review.
+
+DO NOT GIVE ME CODE IF YOU DIDN'T TEST IT BEFOREHAND. SHOW ME ALWAYS THE TEST YOU'VE DONE.
