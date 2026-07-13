@@ -262,6 +262,17 @@ Archivo vivo. El asistente actualiza este registro automáticamente cada vez que
 
 ---
 
+### 023 — Soft delete anonimiza el tax id
+
+- **Fecha:** 2026-07-13
+- **Tipo:** decisión
+- **Contexto:** El soft delete (decisión 015) conserva la fila, pero dejaba vivo el `company_tax_id` (dato sensible) tras "borrar". Trade-off entre auditoría (soft) y privacidad (hard delete).
+- **Decisión:** Mantener soft delete pero anonimizar `company_tax_id` (se setea a cadena vacía) en el mismo `UPDATE` que marca `deleted_at`. Se preserva el audit trail y se elimina el dato sensible.
+- **Motivo:** Lo mejor de ambos mundos con diff mínimo: trazabilidad intacta + sin dato sensible remanente. Las filas borradas no se reconstruyen a dominio (se excluyen en lecturas), así que la cadena vacía no rompe el value object.
+- **Impacto:** `infrastructure/repositories/postgres_obligation_repository.py` (`soft_delete`), test `test_soft_delete_anonymizes_tax_id`.
+
+---
+
 ## Correcciones al asistente
 
 _Ninguna registrada todavía._

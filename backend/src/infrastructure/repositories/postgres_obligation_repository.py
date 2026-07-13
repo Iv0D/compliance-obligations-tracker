@@ -68,7 +68,7 @@ class PostgresObligationRepository:
                 ObligationModel.id == obligation_id,
                 ObligationModel.deleted_at.is_(None),
             )
-            .values(deleted_at=deleted_at)
+            .values(deleted_at=deleted_at, company_tax_id="")
         )
         return result.rowcount > 0
 

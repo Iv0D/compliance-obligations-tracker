@@ -11,6 +11,7 @@ from src.domain.value_objects.company_tax_id import CompanyTaxId
 from src.domain.value_objects.obligation_type import ObligationType
 from src.domain.value_objects.status import ObligationStatus
 from src.infrastructure.database.bootstrap import create_all
+from src.infrastructure.database.models.obligation_model import ObligationModel
 from src.infrastructure.repositories.postgres_obligation_repository import (
     PostgresObligationRepository,
 )
@@ -86,3 +87,22 @@ def test_optimistic_lock_rejects_stale_version(session_factory) -> None:
         repo = PostgresObligationRepository(session)
         with pytest.raises(ConcurrencyConflictError):
             repo.update(obligation, expected_version=1)
+
+
+def test_soft_delete_anonymizes_tax_id(session_factory) -> None:
+    obligation = _make_obligation()
+    with session_factory() as session:
+        PostgresObligationRepository(session).save(obligation)
+        session.commit()
+
+    with session_factory() as session:
+        deleted = PostgresObligationRepository(session).soft_delete(
+            obligation.id, datetime(2026, 7, 13, tzinfo=timezone.utc)
+        )
+        session.commit()
+
+    assert deleted is True
+    with session_factory() as session:
+        model = session.get(ObligationModel, obligation.id)
+        assert model.deleted_at is not None
+        assert model.company_tax_id == ""

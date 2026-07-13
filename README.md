@@ -39,7 +39,45 @@ frontend/src/
 | `documents` | `id` · `obligation_id` (FK) · `filename` · `mock_url` · `created_at` | una obligación **tiene** documentos |
 | `audit_events` | `id` · `obligation_id` (FK) · `from_status` · `to_status` · `changed_at` | una obligación **registra** eventos |
 
-`company_tax_id` se guarda completo, se expone enmascarado (`••••6789`) y nunca se loguea.
+`company_tax_id` se guarda completo, se expone enmascarado (`••••6789`) y nunca se loguea. Al hacer soft delete se marca `deleted_at` y se anonimiza `company_tax_id`, preservando el audit trail.
+
+```mermaid
+erDiagram
+    OBLIGATION ||--o{ DOCUMENT : has
+    OBLIGATION ||--o{ AUDIT_EVENT : records
+
+    OBLIGATION {
+        uuid id PK
+        string type
+        string title
+        string description
+        string status
+        date due_date
+        string owner
+        boolean requires_document
+        string company_tax_id
+        int version
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+    }
+
+    DOCUMENT {
+        uuid id PK
+        uuid obligation_id FK
+        string filename
+        string mock_url
+        datetime created_at
+    }
+
+    AUDIT_EVENT {
+        uuid id PK
+        uuid obligation_id FK
+        string from_status
+        string to_status
+        datetime changed_at
+    }
+```
 
 ## Reglas de dominio (dónde viven)
 
