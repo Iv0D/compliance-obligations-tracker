@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { Alert, Button, StatusBadge } from "@/components/ui";
 import { getObligation } from "@/features/obligations/api";
@@ -8,21 +8,18 @@ import {
   changeStatusAction,
   deleteObligationAction,
 } from "@/features/obligations/actions";
-import { isLocale } from "@/i18n";
-import type { ObligationStatus } from "@/lib/types";
+import { getDictionary, isLocale } from "@/i18n";
 
-type Props = { params: Promise<{ locale: string; id: string }> };
-
-const STATUS_LABELS: Record<ObligationStatus, string> = {
-  pending: "Pendiente",
-  in_progress: "En progreso",
-  submitted: "Enviado",
-  done: "Completado",
+type Props = {
+  params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<{ error?: string }>;
 };
 
-export default async function ObligationDetailPage({ params }: Props) {
+export default async function ObligationDetailPage({ params, searchParams }: Props) {
   const { locale, id } = await params;
   if (!isLocale(locale)) notFound();
+
+  const { error: actionError } = await searchParams;
 
   let obligation;
   try {
@@ -31,7 +28,10 @@ export default async function ObligationDetailPage({ params }: Props) {
     notFound();
   }
 
+  const dictionary = getDictionary(locale);
+  const STATUS_LABELS = dictionary.status;
   const isEs = locale === "es";
+  const selfUrl = `/${locale}/obligations/${id}`;
 
   return (
     <div className="space-y-8">
@@ -48,8 +48,10 @@ export default async function ObligationDetailPage({ params }: Props) {
             {obligation.type.replace(/_/g, " ")} · {isEs ? "Responsable" : "Owner"}: {obligation.owner}
           </p>
         </div>
-        <StatusBadge status={obligation.status} />
+        <StatusBadge status={obligation.status} label={STATUS_LABELS[obligation.status]} />
       </div>
+
+      {actionError && <Alert variant="error">{actionError}</Alert>}
 
       {/* Fields */}
       <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm space-y-3">
@@ -80,7 +82,12 @@ export default async function ObligationDetailPage({ params }: Props) {
           <form
             action={async () => {
               "use server";
-              await attachDocumentAction(locale, id);
+              const result = await attachDocumentAction(locale, id);
+              redirect(
+                "error" in result
+                  ? `${selfUrl}?error=${encodeURIComponent(result.error)}`
+                  : selfUrl
+              );
             }}
           >
             <Button type="submit" variant="secondary">
@@ -109,7 +116,14 @@ export default async function ObligationDetailPage({ params }: Props) {
                   key={target}
                   action={async () => {
                     "use server";
-                    await changeStatusAction(locale, id, target, obligation.version);
+                    const result = await changeStatusAction(
+                      locale, id, target, obligation.version
+                    );
+                    redirect(
+                      "error" in result
+                        ? `${selfUrl}?error=${encodeURIComponent(result.error)}`
+                        : selfUrl
+                    );
                   }}
                 >
                   <Button

@@ -146,7 +146,7 @@ npm run dev                                # http://localhost:3000 → redirige 
 # Backend (unit de dominio + integración HTTP sobre SQLite in-memory)
 cd backend
 export DYLD_LIBRARY_PATH="/opt/homebrew/opt/expat/lib:${DYLD_LIBRARY_PATH:-}"
-.venv/bin/pytest                           # 23 passed
+.venv/bin/pytest                           # 24 passed
 
 # Frontend (Vitest + Testing Library)
 cd frontend
@@ -155,7 +155,28 @@ npm test                                   # flujo del formulario
 
 Los tests de backend no necesitan Postgres levantado (usan SQLite in-memory con `StaticPool`).
 
+## Qué dejé afuera
+
+- Autenticación, roles y multi-tenant.
+- CI (lint + test en pipeline), deploy a producción.
+- Upload real de documentos (solo mock).
+- Paginación, búsqueda y recordatorios.
+- Migraciones con Alembic (`create_all()` al arrancar).
+- Cobertura exhaustiva; tests de comportamiento clave nómás.
+
+Detalle de arquitectura y trade-offs en `DECISIONS.md`.
+
+## Con más tiempo
+
+- CI en GitHub Actions (pytest + vitest + lint).
+- Deploy (backend + front) y seed de datos demo.
+- Paginación en listado y filtros extra (por tipo).
+- Auth simple (API key o sesión básica).
+- Confirmación antes de borrar; mensajes de error i18n en toda la UI (hoy parcialmente inline).
+- Migraciones formales con Alembic.
+
 ## Decisiones
 
-- `decisiones-tecnicas.md`: resumen de alto nivel (qué prioricé, qué dejé afuera).
-- `registro-decisiones.md`: log de auditoría con cada decisión puntual tomada durante el desarrollo.
+- **`DECISIONS.md`**: documento para la defensa (arquitectura, API, overdue, concurrencia, dato sensible, uso de IA).
+- `decisiones-tecnicas.md`: resumen breve de alto nivel.
+- `registro-decisiones.md`: log de auditoría con cada decisión puntual durante el desarrollo.

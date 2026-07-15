@@ -29,19 +29,12 @@ const STATUS_STYLES: Record<ObligationStatus, string> = {
   done: "bg-green-100 text-green-700",
 };
 
-const STATUS_LABELS: Record<ObligationStatus, string> = {
-  pending: "Pendiente",
-  in_progress: "En progreso",
-  submitted: "Enviado",
-  done: "Completado",
-};
-
-export function StatusBadge({ status }: { status: ObligationStatus }) {
+export function StatusBadge({ status, label }: { status: ObligationStatus; label: string }) {
   return (
     <span
       className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[status]}`}
     >
-      {STATUS_LABELS[status]}
+      {label}
     </span>
   );
 }

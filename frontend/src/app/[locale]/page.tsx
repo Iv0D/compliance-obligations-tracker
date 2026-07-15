@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { StatusBadge } from "@/components/ui";
 import { getDashboard, listObligations } from "@/features/obligations/api";
-import { isLocale } from "@/i18n";
+import { getDictionary, isLocale } from "@/i18n";
 import type { ObligationStatus } from "@/lib/types";
 
 type Props = {
@@ -17,6 +17,7 @@ export default async function DashboardPage({ params, searchParams }: Props) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
+  const dictionary = getDictionary(locale);
   const { status: rawStatus } = await searchParams;
   const statusFilter = STATUS_KEYS.includes(rawStatus as ObligationStatus)
     ? (rawStatus as ObligationStatus)
@@ -43,7 +44,7 @@ export default async function DashboardPage({ params, searchParams }: Props) {
       <div className="flex gap-2 flex-wrap">
         <FilterLink locale={locale} current={statusFilter} value={undefined} label={locale === "es" ? "Todas" : "All"} />
         {STATUS_KEYS.map((s) => (
-          <FilterLink key={s} locale={locale} current={statusFilter} value={s} label={s.replace("_", " ")} />
+          <FilterLink key={s} locale={locale} current={statusFilter} value={s} label={dictionary.status[s]} />
         ))}
       </div>
 
@@ -81,7 +82,7 @@ export default async function DashboardPage({ params, searchParams }: Props) {
                 </td>
                 <td className="py-2 pr-4 text-slate-600">{o.type.replace(/_/g, " ")}</td>
                 <td className="py-2 pr-4">
-                  <StatusBadge status={o.status} />
+                  <StatusBadge status={o.status} label={dictionary.status[o.status]} />
                 </td>
                 <td className="py-2 pr-4 text-slate-600">{o.due_date}</td>
                 <td className="py-2 text-slate-600">{o.owner}</td>

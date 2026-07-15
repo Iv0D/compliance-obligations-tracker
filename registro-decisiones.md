@@ -275,9 +275,20 @@ Archivo vivo. El asistente actualiza este registro automáticamente cada vez que
 
 ## Correcciones al asistente
 
-_Ninguna registrada todavía._
+### C01 — TaxId en edición: no enviar valor enmascarado
 
-Cuando el usuario corrija al asistente, la entrada irá aquí con **Tipo: corrección al asistente** y se detallará qué dijo o hizo mal el asistente y qué pidió el usuario en su lugar.
+- **Contexto:** El form de edición tenía fallback que mandaba `company_tax_id_masked` al backend si el campo quedaba vacío.
+- **Corrección:** Rechacé el fallback; taxId obligatorio al editar (decisión 021). El enmascarado solo se muestra como referencia.
+
+### C02 — Version duplicada en ChangeStatusUseCase
+
+- **Contexto:** El use case incrementaba `version` manualmente además del repo.
+- **Corrección:** Quité el incremento del use case; solo el repo lo hace atómicamente en el `UPDATE`.
+
+### C03 — Helper `_latest_created` en rutas POST
+
+- **Contexto:** Tras crear, la ruta buscaba la última fila por `created_at` para armar el detalle.
+- **Corrección:** Uso directo del objeto que devuelve `CreateObligationUseCase`.
 
 ---
 
