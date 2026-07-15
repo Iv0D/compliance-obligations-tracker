@@ -31,6 +31,22 @@ frontend/src/
   middleware.ts            redirección de locale
 ```
 
+## Diagramas
+
+### Arquitectura (capas + patrones)
+
+![Diagrama de arquitectura](docs/diagrams/01-architecture.png)
+
+Fuente editable: [`docs/diagrams/01-architecture.excalidraw`](docs/diagrams/01-architecture.excalidraw)
+
+### Máquina de estados
+
+![Diagrama de máquina de estados](docs/diagrams/02-state-machine.png)
+
+Fuente editable: [`docs/diagrams/02-state-machine.excalidraw`](docs/diagrams/02-state-machine.excalidraw)
+
+`overdue` no es un estado persistido: se deriva de `due_date` y `status` (ver reglas de dominio).
+
 ## Modelo de datos (3 tablas)
 
 | Tabla | Campos | Relación |
@@ -173,7 +189,6 @@ Detalle de arquitectura y trade-offs en `DECISIONS.md`.
 - Paginación en listado y filtros extra (por tipo).
 - Auth simple (API key o sesión básica).
 - Confirmación antes de borrar; mensajes de error i18n en toda la UI (hoy parcialmente inline).
-- Migraciones formales con Alembic.
 
 ## Decisiones
 
