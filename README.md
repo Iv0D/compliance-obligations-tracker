@@ -41,7 +41,9 @@ Fuente editable: [`docs/diagrams/01-architecture.excalidraw`](docs/diagrams/01-a
 
 ### Máquina de estados
 
-![Diagrama de máquina de estados](docs/diagrams/02-state-machine.png)
+<p align="center">
+  <img src="docs/diagrams/02-state-machine.png" alt="Diagrama de máquina de estados" width="720" />
+</p>
 
 Fuente editable: [`docs/diagrams/02-state-machine.excalidraw`](docs/diagrams/02-state-machine.excalidraw)
 
