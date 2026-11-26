@@ -4,6 +4,39 @@ Seguimiento de obligaciones de compliance de una empresa: qué presentar, cuánd
 
 Ayuda a las empresas a gestionar sus obligaciones legales y regulatorias, realizar el seguimiento de los vencimientos, asignar responsabilidades, gestionar la documentación de respaldo y mantener un historial auditable de las actividades de cumplimiento normativo.
 
+## How to run
+
+**Requisitos.** Python 3.11 o posterior, Node.js 22 (desde 22.13) o 24 con npm, y Docker en ejecución con Docker Compose.
+
+### Backend y base de datos
+
+Desde la raíz del repositorio, ejecutá estos comandos en una terminal.
+
+```bash
+cd backend
+python3 -m venv .venv
+.venv/bin/python -m pip install -e ".[dev]"
+docker compose up -d --wait db
+.venv/bin/uvicorn src.main:app --reload
+```
+
+El backend se conecta al PostgreSQL local de Docker Compose y crea las tablas al arrancar. Para usar otra base de datos, configurá `DATABASE_URL` antes de iniciar Uvicorn. Podés verificar el servicio en [`/health`](http://localhost:8000/health) y consultar la API en [Swagger UI](http://localhost:8000/docs).
+
+Si `pyexpat` falla en macOS con Python de Homebrew, ejecutá `export DYLD_LIBRARY_PATH="$(brew --prefix expat)/lib:${DYLD_LIBRARY_PATH:-}"` antes de volver a intentar el comando que falló.
+
+### Frontend
+
+Dejá el backend en ejecución y abrí otra terminal en la raíz del repositorio.
+
+```bash
+cd frontend
+npm ci
+cp .env.local.example .env.local
+npm run dev
+```
+
+Abrí [http://localhost:3000](http://localhost:3000). La app redirige a `/es` y se conecta a la API en `http://localhost:8000`. Si la API corre en otra dirección, ajustá `NEXT_PUBLIC_API_URL` en `.env.local`.
+
 ## Stack
 
 - **Backend:** FastAPI + Pydantic + SQLAlchemy + PostgreSQL (SQLite en tests). Capas: `domain` → `application` → `infrastructure` + `interfaces/http`.
@@ -128,38 +161,6 @@ Ninguna regla vive en el handler HTTP: las rutas solo traducen HTTP ↔ use case
 
 Modelo de error consistente: `{"error": {"code": "...", "message": "..."}}`. Códigos: `not_found` (404), `conflict` (409), `invalid_transition` / `document_required` / `invalid_company_tax_id` / `validation_error` (422). Docs OpenAPI en `/docs`.
 
-## Levantar el proyecto
-
-### Backend
-
-```bash
-cd backend
-
-# macOS + Homebrew Python: apuntar a la libexpat de Homebrew si pyexpat falla
-export DYLD_LIBRARY_PATH="/opt/homebrew/opt/expat/lib:${DYLD_LIBRARY_PATH:-}"
-
-python3 -m venv .venv
-.venv/bin/pip install -e ".[dev]"
-
-# Postgres vía docker-compose (recomendado)
-docker compose up -d
-export DATABASE_URL="postgresql+psycopg://postgres:postgres@localhost:5432/compliance"
-
-# Servidor (las tablas se crean solas al arrancar con create_all)
-.venv/bin/uvicorn src.main:app --reload   # http://localhost:8000  ·  docs en /docs
-```
-
-`DATABASE_URL` se lee del entorno (default: Postgres local).
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-cp .env.local.example .env.local          # NEXT_PUBLIC_API_URL=http://localhost:8000
-npm run dev                                # http://localhost:3000 → redirige a /es
-```
-
 ## Tests
 
 ```bash
@@ -199,3 +200,7 @@ Detalle de arquitectura y trade-offs en `DECISIONS.md`.
 - **`DECISIONS.md`**: documento para la defensa (arquitectura, API, overdue, concurrencia, dato sensible, uso de IA).
 - `decisiones-tecnicas.md`: resumen breve de alto nivel.
 - `registro-decisiones.md`: log de auditoría con cada decisión puntual durante el desarrollo.
+
+## Licencia
+
+Este proyecto se distribuye bajo la licencia MIT.
