@@ -2,6 +2,8 @@
 
 Seguimiento de obligaciones de compliance de una empresa: qué presentar, cuándo vence, en qué estado y con qué documentación. Backend con reglas de dominio aisladas (máquina de estados, invariante doc-gated, overdue derivado, audit trail, dato sensible enmascarado, concurrencia con optimistic lock) y frontend Next.js con i18n es/en.
 
+Ayuda a las empresas a gestionar sus obligaciones legales y regulatorias, realizar el seguimiento de los vencimientos, asignar responsabilidades, gestionar la documentación de respaldo y mantener un historial auditable de las actividades de cumplimiento normativo.
+
 ## Stack
 
 - **Backend:** FastAPI + Pydantic + SQLAlchemy + PostgreSQL (SQLite en tests). Capas: `domain` → `application` → `infrastructure` + `interfaces/http`.
