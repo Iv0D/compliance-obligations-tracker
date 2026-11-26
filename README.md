@@ -175,7 +175,7 @@ npm test                                   # flujo del formulario
 
 Los tests de backend no necesitan Postgres levantado (usan SQLite in-memory con `StaticPool`).
 
-## Qué dejé afuera
+## Qué dejé afuera (no me dio tiempo :p)
 
 - Autenticación, roles y multi-tenant.
 - CI (lint + test en pipeline), deploy a producción.
@@ -186,7 +186,7 @@ Los tests de backend no necesitan Postgres levantado (usan SQLite in-memory con 
 
 Detalle de arquitectura y trade-offs en `DECISIONS.md`.
 
-## Con más tiempo
+## Próximamente
 
 - CI en GitHub Actions (pytest + vitest + lint).
 - Deploy (backend + front) y seed de datos demo.
